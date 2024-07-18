@@ -11,15 +11,52 @@ layout: default
           <p class="desc">{{ page.subtitle }}</p>
         </header>
 
-        <article>
-          <!-- Latest posts -->
-          {% if page.latest_posts -%}
-            <h2><a href="{{ '/blog/' | relative_url }}" style="color: inherit;">latest posts</a></h2>
-            {%- include latest_posts.html %}
-          {%- endif %}
+        <!-- Content -->
+    <div class="post distill">
+      <d-title>
+        <h1>{{ page.title }}</h1>
+        <p>{{ page.description }}</p>
+      </d-title>
+      {% if page.authors %}
+        <d-byline></d-byline>
+      {% endif %}
 
+      <d-article>
+        {% if page.toc %}
+          <d-contents>
+            <nav class="l-text figcaption">
+              <h3>Contents</h3>
+              {% for section in page.toc %}
+                <div>
+                  <a href="#{{ section.name | slugify }}">{{ section.name }}</a>
+                </div>
+                {% if section.subsections %}
+                  <ul>
+                    {% for subsection in section.subsections %}
+                      <li>
+                        <a href="#{{ subsection.name | slugify }}">{{ subsection.name }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endfor %}
+            </nav>
+          </d-contents>
+        {% endif %}
+        {{ content }}
+      </d-article>
 
-          <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=fl3gjrTOBNVfz-VckHobk8rvS-QAnN5WzmpRlfw5wJ0&cl=ffffff&w=450"></script>
-        </article>
+      <d-appendix>
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+      </d-appendix>
+
+      <d-bibliography src="{{ page.bibliography | prepend: '/assets/bibliography/' | relative_url }}"></d-bibliography>
+
+      {% if site.disqus_shortname and page.disqus_comments %}{% include disqus.liquid %}{% endif %}
+      {% if site.giscus.repo and page.giscus_comments %}
+        {% include giscus.liquid %}
+      {% endif %}
+    </div>
 
 </div>
